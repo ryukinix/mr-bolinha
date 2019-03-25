@@ -6,5 +6,3 @@ bolinhas. Ou seja, mister bolinha!
 ## License
 
 MIT
-
-# trivial-gamekit-template
