@@ -167,3 +167,6 @@
   "MAIN Inicia o jogo MR-BOLINHA"
   (setq *bolinhas* (gerar-bolinhas))
   (gamekit:start 'example))
+
+(defun stop ()
+  (gamekit:stop))

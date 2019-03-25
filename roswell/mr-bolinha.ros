@@ -1,0 +1,43 @@
+#!/bin/sh
+#|-*- mode:lisp -*-|#
+#|
+exec ros -Q -- $0 "$@"
+|#
+
+#+quicklisp (defun ensure-dist-installed (dist nick)
+              (let ((d (ql-dist:find-dist nick)))
+                (when (not (and d (ql-dist:installedp d)))
+                 (ql-dist:install-dist dist
+                                       :prompt nil))))
+
+(progn ;;init forms
+  (ros:ensure-asdf)
+  #+quicklisp
+  (progn
+    (ensure-dist-installed "http://bodge.borodust.org/dist/org.borodust.bodge.txt"
+                           "org.borodust.bodge")
+    (ql:quickload :mr-bolinha))
+  )
+
+(defpackage :ros.script.mr-bolinha
+  (:use :cl))
+(in-package :ros.script.mr-bolinha)
+
+
+(defun main (&rest argv)
+  (declare (ignorable argv))
+  (handler-case
+      (progn
+        (format t "[+] Starting MR BOLINHA System...~%")
+        (mr-bolinha:main)
+        (format t "[+] Press C-c to stop MR BOLINHA system...~%")
+        (loop do (sleep 5)))
+    (#+sbcl sb-sys:interactive-interrupt
+     #+ccl  ccl:interrupt-signal-condition
+     #+clisp system::simple-interrupt-condition
+     #+ecl ext:interactive-interrupt
+     #+allegro excl:interrupt-signal
+     () (progn
+          (format *error-output* "Aborting.~&")
+          (uiop:quit)))))
+;;; vim: set ft=lisp lisp:
