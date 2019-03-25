@@ -164,6 +164,6 @@
   (apply #'gamekit:draw-circle *player*))
 
 (defun main ()
-  ""
+  "MAIN Inicia o jogo MR-BOLINHA"
   (setq *bolinhas* (gerar-bolinhas))
   (gamekit:start 'example))
